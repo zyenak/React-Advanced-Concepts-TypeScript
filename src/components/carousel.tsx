@@ -15,7 +15,7 @@ export interface CarouselHandle {
 
 const CustomCarousel = forwardRef<CarouselHandle, CarouselProps>(({ slides }, ref) => {
     const [currentSlide, setCurrentSlide] = useState(0);
-    const [slideColor, setSlideColor] = useState('blue');
+    const [slideColors, setSlideColors] = useState<string[]>(Array(slides.length).fill('#A0C6FC'));
 
     useImperativeHandle(ref, () => ({
         next() {
@@ -25,15 +25,18 @@ const CustomCarousel = forwardRef<CarouselHandle, CarouselProps>(({ slides }, re
             setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
         },
         goToSlide(index: number) {
-            if (index > -1 && index < 3) {
+            if (index >= 0 && index < slides.length) {
                 setCurrentSlide(index);
-            }
-            else {
+            } else {
                 setCurrentSlide(0);
             }
         },
         changeSlideColor() {
-            setSlideColor((prev) => (prev === '#A0C6FC' ? '#CECECE' : '#A0C6FC'));
+            setSlideColors((prevColors) => {
+                const newColors = [...prevColors];
+                newColors[currentSlide] = newColors[currentSlide] === '#A0C6FC' ? '#CECECE' : '#A0C6FC';
+                return newColors;
+            });
         },
     }));
 
@@ -49,7 +52,7 @@ const CustomCarousel = forwardRef<CarouselHandle, CarouselProps>(({ slides }, re
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: slideColor,
+                            backgroundColor: slideColors[index],
                             margin: '0 auto',
                             marginBottom: 2,
                         }}

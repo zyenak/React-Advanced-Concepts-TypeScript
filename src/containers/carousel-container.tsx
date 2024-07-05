@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { Button, Box, TextField } from '@mui/material';
 import CustomCarousel, { CarouselHandle } from '../components/carousel';
 import { useErrorBoundary } from 'react-error-boundary';
@@ -8,29 +8,24 @@ const CarouselContainer: React.FC = () => {
     const slides = ['Slide 1', 'Slide 2', 'Slide 3'];
     const { showBoundary } = useErrorBoundary();
 
-
-    const handleExplode = () => {
-        try {
-            console.log("throwing error")
-            throw new Error('💥 KABOOM 💥');
-        } catch (error) {
-            console.log("showing boundary")
-            showBoundary(error);
-        }
-    };
-
-
     const handleGoToSlide = () => {
-        console.log("slide val: ", document.getElementById('slide-index') as HTMLInputElement);
         const index = parseInt((document.getElementById('slide-index') as HTMLInputElement).value, 10);
         if (carouselRef.current) {
             carouselRef.current.goToSlide(index);
         }
     };
 
+    const handleExplode = () => {
+        try {
+            throw new Error('💥 KABOOM 💥');
+        } catch (error) {
+            showBoundary(error);
+        }
+    };
+
     return (
         <Box sx={{ textAlign: 'center' }}>
-            <h1>Carousel useRef Assigment</h1>
+            <h1>Carousel useRef Assignment</h1>
             <CustomCarousel ref={carouselRef} slides={slides} />
             <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
                 <Box sx={{ display: 'flex', gap: 2 }}>
@@ -42,7 +37,7 @@ const CarouselContainer: React.FC = () => {
                     <Button variant="contained" onClick={handleGoToSlide}>Jump to Slide</Button>
                 </Box>
                 <Button variant="contained" onClick={() => carouselRef.current?.changeSlideColor()}>Change Color</Button>
-                <Button variant="contained" onClick={() => handleExplode()}>Show Error</Button>
+                <Button variant="contained" onClick={handleExplode}>Show Error</Button>
             </Box>
         </Box>
     );
