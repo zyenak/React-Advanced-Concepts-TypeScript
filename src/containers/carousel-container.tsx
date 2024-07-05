@@ -6,26 +6,19 @@ import { useErrorBoundary } from 'react-error-boundary';
 const CarouselContainer: React.FC = () => {
     const carouselRef = useRef<CarouselHandle>(null);
     const slides = ['Slide 1', 'Slide 2', 'Slide 3'];
-    const [explode, setExplode] = useState(false);
     const { showBoundary } = useErrorBoundary();
 
-    useEffect(() => {
-        const handleExplode = () => {
-            try {
-                console.log("throwing error")
-                setExplode(false);
-                throw new Error('💥 KABOOM 💥');
-            } catch (error) {
-                console.log("showing boundary")
-                showBoundary(error);
-            }
-        };
 
-        if (explode) {
-            console.log("if explode? ")
-            handleExplode();
+    const handleExplode = () => {
+        try {
+            console.log("throwing error")
+            throw new Error('💥 KABOOM 💥');
+        } catch (error) {
+            console.log("showing boundary")
+            showBoundary(error);
         }
-    }, [explode]);
+    };
+
 
     const handleGoToSlide = () => {
         console.log("slide val: ", document.getElementById('slide-index') as HTMLInputElement);
@@ -49,7 +42,7 @@ const CarouselContainer: React.FC = () => {
                     <Button variant="contained" onClick={handleGoToSlide}>Jump to Slide</Button>
                 </Box>
                 <Button variant="contained" onClick={() => carouselRef.current?.changeSlideColor()}>Change Color</Button>
-                <Button variant="contained" onClick={() => setExplode(true)}>Show Error</Button>
+                <Button variant="contained" onClick={() => handleExplode()}>Show Error</Button>
             </Box>
         </Box>
     );
